@@ -8,11 +8,14 @@ using System.Web.Mvc;
 
 namespace Loteria.Controllers
 {
-    public class PainelController : Controller
+    public class PainelController : GenericoController
     {
         PainelModelViewModel painelModel = new PainelModelViewModel();
+        
+        #region Serviços
         SorteioRepository sorteioRepository;
         UsuariosRepository usuariosRepository;
+        #endregion
 
         public PainelController()
         {
@@ -20,7 +23,6 @@ namespace Loteria.Controllers
             usuariosRepository = new UsuariosRepository(sorteioRepository.RepositoryFactory); 
         }
 
-        // GET: Painel
         public ActionResult Inicio()
         {
             painelModel.Sorteios = sorteioRepository.RecuperarPorAno(DateTime.Now.Year).ToList();

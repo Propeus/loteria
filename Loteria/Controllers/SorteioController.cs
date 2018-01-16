@@ -1,4 +1,5 @@
-﻿using Loteria.Helper;
+﻿using Loteria.Attributes;
+using Loteria.Helper;
 using Loteria.Models;
 using Repository;
 using Service;
@@ -9,12 +10,16 @@ using System.Web.Mvc;
 
 namespace Loteria.Controllers
 {
-    public class SorteioController : Controller
+    public class SorteioController : GenericoController
     {
         SorteioViewModel sorteioViewModel = new SorteioViewModel();
+       
+        #region Serviços
         SorteioService sorteioService;
         ApostaService apostaService;
         UsuarioService UsuarioService;
+        #endregion
+
         public SorteioController()
         {
             sorteioService = new SorteioService();
@@ -29,13 +34,11 @@ namespace Loteria.Controllers
             return Json(new { Numeros });
         }
 
+        [RequerSessao("Inicio", "Painel")]
         [HttpPost]
         public ActionResult RegistrarNumeros(SorteioViewModel model)
         {
-            if (!Helper.Helper.PossuiSessaoUsuario())
-            {
-                return RedirectToAction("Inicio", "Painel");
-            }
+           
 
             try
             {
@@ -58,13 +61,18 @@ namespace Loteria.Controllers
             return View("Cadastrar",model);
         }
 
+        [RequerSessao("Inicio", "Painel")]
         public ActionResult Cadastrar()
         {
-            if (!Helper.Helper.PossuiSessaoUsuario())
-            {
-                return RedirectToAction("Inicio", "Painel");
-            }
+            
             InicializarModel(sorteioViewModel);
+            return View(sorteioViewModel);
+        }
+
+        public ActionResult Visualizar()
+        {
+            sorteioViewModel.Usuario = Session["User"] as Usuarios ?? new Usuarios();
+            sorteioViewModel.Sorteios = sorteioService.Repository.RecuperarPorAno(DateTime.Now.Year).ToList();
             return View(sorteioViewModel);
         }
 
@@ -72,14 +80,6 @@ namespace Loteria.Controllers
         {
             model.Usuario = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
             model.Sorteios = sorteioService.Repository.RecuperarPorAno(DateTime.Now.Year).ToList();
-        }
-
-        public ActionResult Visualizar()
-        {
-
-            sorteioViewModel.Usuario = Session["User"] as Usuarios ?? new Usuarios();
-            sorteioViewModel.Sorteios = sorteioService.Repository.RecuperarPorAno(DateTime.Now.Year).ToList();
-            return View(sorteioViewModel);
         }
     }
 }

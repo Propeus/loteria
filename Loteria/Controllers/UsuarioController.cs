@@ -9,12 +9,15 @@ using System.Web.Mvc;
 
 namespace Loteria.Controllers
 {
-    public class UsuarioController : Controller
+    public class UsuarioController : GenericoController
     {
 
         PainelModelViewModel painelModel = new PainelModelViewModel();
+        
+        #region Serviços
         SorteioRepository sorteioRepository;
         UsuarioService usuarioService;
+        #endregion
 
         public UsuarioController()
         {
@@ -35,7 +38,6 @@ namespace Loteria.Controllers
             return Json(new { Sucesso = false, Mensagens= new List<string> { "Login e/ou senha incoreto(s)." } });
         }
 
-    
         [HttpPost]
         public JsonResult Registro(Usuarios usuarios)
         {

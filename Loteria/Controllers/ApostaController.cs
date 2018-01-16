@@ -1,5 +1,6 @@
 ﻿using Loteria.Helper;
 using Loteria.Models;
+using Loteria.Attributes;
 using Repository;
 using Service;
 using System;
@@ -10,13 +11,17 @@ using System.Web.Mvc;
 
 namespace Loteria.Controllers
 {
-    public class ApostaController : Controller
+    public class ApostaController : GenericoController
     {
 
         ApostasViewModel apostasViewModel = new ApostasViewModel();
+        
+        #region Serviços
         SorteioService sorteioService;
         ApostaService apostaService;
         UsuarioService UsuarioService;
+        #endregion
+
         public ApostaController()
         {
             
@@ -25,6 +30,7 @@ namespace Loteria.Controllers
             UsuarioService = new UsuarioService(sorteioService.Repository.RepositoryFactory);
         }
 
+        [RequerSessao("Inicio", "Painel")]
         [HttpPost]
         public JsonResult GerarNumeros()
         {
@@ -32,6 +38,7 @@ namespace Loteria.Controllers
             return Json(new { Numeros });
         }
 
+        [RequerSessao("Inicio", "Painel")]
         [HttpPost]
         public ActionResult RegistrarNumeros(ApostasViewModel model)
         {
@@ -58,22 +65,17 @@ namespace Loteria.Controllers
             return View("Cadastrar", model);
         }
 
+        [RequerSessao("Inicio", "Painel")]
         public ActionResult Cadastrar()
         {
-            if (!Helper.Helper.PossuiSessaoUsuario())
-            {
-                return RedirectToAction("Inicio", "Painel");
-            }
             InicializarModel(apostasViewModel);
             return View(apostasViewModel);
         }
+
+        [RequerSessao("Inicio", "Painel")]
         public ActionResult Visualizar()
         {
-            if (!Helper.Helper.PossuiSessaoUsuario())
-            {
-                return RedirectToAction("Inicio", "Painel");
-            }
-
+           
             apostasViewModel.Usuario = Session["User"] as Usuarios;
             apostasViewModel.Apostas = apostaService.RecuperarResultadosPorAno(apostasViewModel.Usuario, DateTime.Now.Year).ToList();
             return View(apostasViewModel);

@@ -161,7 +161,9 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Attributes\RequerSessaoAttribute.cs" />
     <Compile Include="Controllers\ApostaController.cs" />
+    <Compile Include="Controllers\GenericoController.cs" />
     <Compile Include="Controllers\PainelController.cs" />
     <Compile Include="Controllers\SorteioController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
