@@ -8,7 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Loterica.Controllers
+namespace Loteria.Controllers
 {
     public class ApostaController : Controller
     {
@@ -34,10 +34,7 @@ namespace Loterica.Controllers
         [HttpPost]
         public ActionResult RegistrarNumeros(ApostasViewModel model)
         {
-            if (!Helper.PossuiSessaoUsuario())
-            {
-                return RedirectToAction("Sorteios", "Painel");
-            }
+
             try
             {
                 if (ModelState.IsValid)
@@ -57,12 +54,12 @@ namespace Loterica.Controllers
             }
 
             InicializarModel(model);
-            return View("Cadastrar",model);
+            return View("Cadastrar", model);
         }
 
         public ActionResult Cadastrar()
         {
-            if (!Helper.PossuiSessaoUsuario())
+            if (!Helper.Helper.PossuiSessaoUsuario())
             {
                 return RedirectToAction("Inicio", "Painel");
             }
@@ -71,7 +68,7 @@ namespace Loterica.Controllers
         }
         public ActionResult Visualizar()
         {
-            if (!Helper.PossuiSessaoUsuario())
+            if (!Helper.Helper.PossuiSessaoUsuario())
             {
                 return RedirectToAction("Inicio", "Painel");
             }

@@ -14,11 +14,11 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>@item.NumeroSorteioExibicao</td>
-                            <td>@item.DataSorteio.ToLongDateString()</td>
-                            <td>@item.ValorPremio</td>
-                        </tr>
+                    <tr>
+                        <td>@item.NumeroSorteioExibicao</td>
+                        <td>@item.DataSorteio.ToShortDateString() ás @item.DataSorteio.ToShortTimeString()</td>
+                        <td>@item.ValorPremio</td>
+                    </tr>
                     }
                 </tbody>
             </table>

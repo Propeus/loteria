@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
-namespace Loterica.Controllers
+namespace Loteria.Controllers
 {
     public class SorteioController : Controller
     {
@@ -32,9 +32,9 @@ namespace Loterica.Controllers
         [HttpPost]
         public ActionResult RegistrarNumeros(SorteioViewModel model)
         {
-            if (!Helper.PossuiSessaoUsuario())
+            if (!Helper.Helper.PossuiSessaoUsuario())
             {
-                return RedirectToAction("Sorteios", "Painel");
+                return RedirectToAction("Inicio", "Painel");
             }
 
             try
@@ -60,9 +60,9 @@ namespace Loterica.Controllers
 
         public ActionResult Cadastrar()
         {
-            if (!Helper.PossuiSessaoUsuario())
+            if (!Helper.Helper.PossuiSessaoUsuario())
             {
-                return RedirectToAction("Sorteios", "Painel");
+                return RedirectToAction("Inicio", "Painel");
             }
             InicializarModel(sorteioViewModel);
             return View(sorteioViewModel);
