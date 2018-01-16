@@ -1,0 +1,183 @@
+﻿@using Loteria.Helper;
+@model Repository.Usuarios
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@Styles.Render("~/Content/bootstrap")
+@Styles.Render("~/Content/css")
+
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+<link href="~/Content/Site.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.2.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>*@
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            @Html.ActionLink("Loteria", "Inicio", "Painel", null, new { @class = "navbar-brand" })
+        </div>
+
+        <ul class="nav navbar-nav menu">
+
+            @if (Helper.PossuiSessaoUsuario())
+            {
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Apostas<span class="caret"></span></a>
+                    <ul class="dropdown-menu animated flipInX" role="menu" aria-labelledby="dropdownMenu1">
+                        <li>@Html.ActionLink("Cadastrar aposta", "Cadastrar", "Aposta")</li>
+                        <li>@Html.ActionLink("Visualizar aposta", "Visualizar", "Aposta")</li>
+                    </ul>
+                </li>
+            }
+            @if (Helper.UsuarioSessaoTipoConta() == Repository.IdcTipoConta.Administrador)
+            {
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sorteios<span class="caret"></span></a>
+                    <ul class="dropdown-menu animated flipInX" role="menu" aria-labelledby="dropdownMenu1">
+                        <li>@Html.ActionLink("Cadastrar sorteio", "Cadastrar", "Sorteio")</li>
+                        <li>@Html.ActionLink("Visualizar sorteio", "Visualizar", "Sorteio")</li>
+                    </ul>
+                </li>
+            }
+            else
+            {
+                <li>@Html.ActionLink("Visualizar sorteio", "Visualizar", "Sorteio")</li>
+            }
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            @if (!Helper.PossuiSessaoUsuario())
+            {
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Login <span class="caret"></span></a>
+                    <ul class="dropdown-menu dropdown-lr animated slideInRight" role="menu">
+                        <div class="col-lg-12">
+                            <div class="text-center"><h3><b>Login</b></h3></div>
+                            <form id="ajax-login-form" action="/Usuario/Login" method="post" role="form" autocomplete="off">
+
+                                <div class="form-group">
+                                    <label for="username">Usuario</label>
+                                    <input type="text" name="Usuario" id="Usuario" tabindex="1" class="form-control" placeholder="Usuario" value="" autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Senha</label>
+                                    <input type="password" name="Senha" id="Senha" tabindex="2" class="form-control" placeholder="Senha" autocomplete="off">
+                                </div>
+                                <div class="form-group erroMensagem">
+
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-xs-5 pull-right">
+                                            <input type="button" name="login-submit" id="login-submit" form="ajax-login-form" tabindex="4" class="form-control btn btn-success btnLoginRegistro" value="Login">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Registrar <span class="caret"></span></a>
+                    <ul class="dropdown-menu dropdown-lr animated flipInX" role="menu">
+                        <div class="col-lg-12">
+                            <div class="text-center"><h3><b>Registrar</b></h3></div>
+                            <form id="ajax-register-form" action="/Usuario/Registro" method="post" role="form" autocomplete="off">
+                                <div class="form-group">
+                                    @Html.DisplayFor(x => x.Usuario)
+                                    @Html.TextBoxFor(x => x.Usuario, new { @class = "form-control", placeholder = "Usuario" })
+
+                                    @Html.ValidationMessageFor(x => x.Usuario, null, new { @class = "label label-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.DisplayFor(x => x.Detalhes.E_Mail)
+                                    @Html.TextBoxFor(x => x.Detalhes.E_Mail, new { @class = "form-control", @placeholder = "E-mail" })
+
+                                    @Html.ValidationMessageFor(x => x.Detalhes.E_Mail, null, new { @class = "label label-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.DisplayFor(x => x.Senha)
+                                    @Html.PasswordFor(x => x.Senha, new { @class = "form-control", @placeholder = "Senha" })
+
+                                    @Html.ValidationMessageFor(x => x.Senha, null, new { @class = "label label-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.DisplayFor(x => x.Senha)
+                                    @Html.PasswordFor(x => x.ConfirmarSenha, new { @class = "form-control", @placeholder = "Confirme a senha" })
+
+                                    @Html.ValidationMessageFor(x => x.ConfirmarSenha, null, new { @class = "label label-danger" })
+                                </div>
+                                <div class="form-group erroMensagem">
+
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-xs-6 col-xs-offset-3">
+                                            <input type="button" name="register-submit" id="register-submit" form="ajax-register-form" tabindex="4" class="form-control btn btn-info btnLoginRegistro" value="Registrar">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </ul>
+                </li>
+            }
+            else
+            {
+                <li><a href="#"></a></li>
+
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Olá @Model.Usuario <span class="caret"></span></a>
+                    <ul class="dropdown-menu animated flipInX" role="menu" aria-labelledby="dropdownMenu1">
+                        <li>@Html.ActionLink("Logout", "Logout", "Usuario")</li>
+
+                    </ul>
+                </li>
+            }
+        </ul>
+    </div>
+</nav>
+
+
+<script>
+    function validateForm() {
+        return $("#form").validate().form();
+    }
+
+    $(".btnLoginRegistro").click(function () {
+        var form = $("#" + $(this).attr('form'));
+        var url = $(form).attr("action");
+        var method = $(form).attr("method");
+        var erro = $(form).find(".erroMensagem");
+        $.ajax({
+            url: url,
+            method: method,
+            data: form.serialize(),
+            success: function (e) {
+                if (e.Sucesso == true) {
+                    location.reload();
+                } else {
+                    var msg = "";
+                    for (var i = 0; i < e.Mensagens.length; i++) {
+                        msg += " <div class=\"form-group\"><label class=\"label label-danger \">" + e.Mensagens[i] + "</label></div>"
+                    }
+                    $(erro).html(msg);
+
+                }
+            }
+        })
+    })
+
+    $(".menu li").click(function () {
+        $('.menu').removeAttr('active');
+        $(this).attr('active');
+    })
+</script>
+
+
+

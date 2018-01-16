@@ -1,0 +1,41 @@
+﻿@model List<Service.Model.ResultadoAposta>
+
+<div class="container">
+    <div class="row">
+        <div class="span5">
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <tr>
+                        <th>Data da aposta</th>
+                        <th>Numero do sorteio</th>
+                        <th>Numero da aposta</th>
+                        <th>Quantidade de acertos</th>
+                        <th>Numeros acertados</th>
+                        <th>Prêmio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Aposta.DataAposta.ToLongDateString()</td>
+                            @if (item.Sorteio != null)
+                            {
+
+                                <td>@item.Sorteio.NumeroSorteioExibicao</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                            <td>@item.Aposta.NumeroApostaExibicao</td>
+                            <td>@item.Acertos</td>
+                            <td>@string.Join("-", @item.NumerosAcertados)</td>
+                            <td>@item.ValorPremio</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

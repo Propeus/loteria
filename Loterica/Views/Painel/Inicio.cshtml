@@ -1,0 +1,13 @@
+﻿@model Loteria.Models.PainelModelViewModel
+
+
+@if (Loteria.Helper.Helper.PossuiSessaoUsuario())
+{
+    { Html.RenderAction("Visualizar", "Aposta"); }
+}
+else
+{
+    @Html.Partial("~/Views/Shared/MenuPartial.cshtml", Model.Usuario)
+    @Html.Partial("~/Views/Shared/SorteiosGridPartial.cshtml", Model.Sorteios)
+}
+

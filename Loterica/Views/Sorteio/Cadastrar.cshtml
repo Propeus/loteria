@@ -1,0 +1,92 @@
+﻿@model Loteria.Models.SorteioViewModel
+@Html.Partial("~/Views/Shared/MenuPartial.cshtml", Model.Usuario)
+@Html.Partial("~/Views/Shared/ErroPartial.cshtml")
+<div class="text-center"><h3><b>Cadastrar sorteio</b></h3></div>
+<hr class="divider" />
+<div class="form-group">
+    <div id="ajax-form" class="" action="/Sorteio/GerarNumeros" method="post" role="form" autocomplete="off">
+        <div class="container col-lg-6 col-lg-offset-4">
+            <label>Numeros: </label>
+            <div class="form-group form-inline">
+                <input type="number" class="form-control NumeroSorteio" style="width:60px" value="0" disabled />
+                <label>-</label>
+                <input type="number" class="form-control NumeroSorteio" style="width:60px" value="0" disabled />
+                <label>-</label>
+                <input type="number" class="form-control NumeroSorteio" style="width:60px" value="0" disabled />
+                <label>-</label>
+                <input type="number" class="form-control NumeroSorteio" style="width:60px" value="0" disabled />
+                <label>-</label>
+                <input type="number" class="form-control NumeroSorteio" style="width:60px" value="0" disabled />
+                <label>-</label>
+                <input type="number" class="form-control NumeroSorteio" style="width:60px" value="0" disabled />
+                <div class="form-group">
+                    <input type="button" name="register-submit" id="register-submit" form="ajax-form" class="btn btn-info btnGerar" value="Gerar numeros">
+
+                </div>
+            </div>
+        </div>
+
+        @Html.ValidationMessageFor(x => x.Usuario, null, new { @class = "label label-danger" })
+    </div>
+</div>
+
+<div class="container col-lg-6 col-lg-offset-4 form-inline form-group">
+
+    <label>Valor do premio: </label>
+    <form action="/Sorteio/RegistrarNumeros" method="post" id="form-regstro">
+        @Html.HiddenFor(x => x.Sorteio.NumeroSorteio)
+        @Html.HiddenFor(x => x.Sorteio.NumeroSorteioExibicao)
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">R$</span>
+                @Html.TextBoxFor(x=> x.Sorteio.ValorPremio,new {@class= "form-control ValorSorteio",@style= "width:310px" ,value="0"})
+            </div>
+
+        </div>
+        <div class="form-group">
+            <input type="submit" name="register-submit" id="register-submit" class="btn btn-info btnRegistrar" value="Registrar sorteio">
+        </div>
+    </form>
+</div>
+<div class="form-group erroMensagem">
+
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="form-group">
+    <hr class="divider" />
+</div>
+@Html.Partial("~/Views/Shared/SorteiosGridPartial.cshtml", Model.Sorteios)
+
+<script>
+    $(".btnGerar").click(function () {
+        var form = $("#" + $(this).attr('form'));
+        var url = $(form).attr("action");
+        var method = $(form).attr("method");
+        $.ajax({
+            url: url,
+            method: method,
+            success: function (e) {
+                var numerosSoretiosInput = $(".NumeroSorteio");
+                for (var i = 0; i < numerosSoretiosInput.length; i++) {
+                    $(numerosSoretiosInput[i]).val(e.Numeros[i]);
+                }
+                $("#Sorteio_NumeroSorteio").val(e.Numeros.join(''));
+                $("#Sorteio_NumeroSorteioExibicao").val(e.Numeros.join('-'));
+            }
+        })
+    })
+
+
+    $(".menu li").click(function () {
+        $('.menu').removeAttr('active');
+        $(this).attr('active');
+    })
+</script>
+

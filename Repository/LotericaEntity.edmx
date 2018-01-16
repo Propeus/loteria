@@ -1,0 +1,314 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="LotericaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Apostas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="NumeroAposta" Type="bigint" Nullable="false" />
+          <Property Name="NumeroApostaExibicao" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DataAposta" Type="datetime" Nullable="false" />
+          <Property Name="IdSorteio" Type="int" />
+        </EntityType>
+        <EntityType Name="Detalhes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="E_Mail" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sorteios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NumeroSorteio" Type="bigint" Nullable="false" />
+          <Property Name="NumeroSorteioExibicao" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DataSorteio" Type="datetime" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="ValorPremio" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Usuario" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Senha" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="TipoConta" Type="int" Nullable="false" />
+          <Property Name="IdDetalhe" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Apostas_Sorteios">
+          <End Role="Sorteios" Type="Self.Sorteios" Multiplicity="0..1" />
+          <End Role="Apostas" Type="Self.Apostas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sorteios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Apostas">
+              <PropertyRef Name="IdSorteio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Apostas_Usuarios">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="Apostas" Type="Self.Apostas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Apostas">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Sorteios_Usuarios">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="Sorteios" Type="Self.Sorteios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Sorteios">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuarios_Detalhes">
+          <End Role="Detalhes" Type="Self.Detalhes" Multiplicity="1" />
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Detalhes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="IdDetalhe" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="LotericaModelStoreContainer">
+          <EntitySet Name="Apostas" EntityType="Self.Apostas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Detalhes" EntityType="Self.Detalhes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sorteios" EntityType="Self.Sorteios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Apostas_Sorteios" Association="Self.FK_Apostas_Sorteios">
+            <End Role="Sorteios" EntitySet="Sorteios" />
+            <End Role="Apostas" EntitySet="Apostas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Apostas_Usuarios" Association="Self.FK_Apostas_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Apostas" EntitySet="Apostas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Sorteios_Usuarios" Association="Self.FK_Sorteios_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Sorteios" EntitySet="Sorteios" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuarios_Detalhes" Association="Self.FK_Usuarios_Detalhes">
+            <End Role="Detalhes" EntitySet="Detalhes" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="LotericaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="LotericaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Detalhes" EntityType="LotericaModel.Detalhes" />
+          <EntitySet Name="Usuarios" EntityType="LotericaModel.Usuarios" />
+          <AssociationSet Name="FK_Usuarios_Detalhes" Association="LotericaModel.FK_Usuarios_Detalhes">
+            <End Role="Detalhes" EntitySet="Detalhes" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+          <EntitySet Name="Apostas" EntityType="LotericaModel.Apostas" />
+          <EntitySet Name="Sorteios" EntityType="LotericaModel.Sorteios" />
+          <AssociationSet Name="FK_Apostas_Sorteios" Association="LotericaModel.FK_Apostas_Sorteios">
+            <End Role="Sorteios" EntitySet="Sorteios" />
+            <End Role="Apostas" EntitySet="Apostas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Apostas_Usuarios" Association="LotericaModel.FK_Apostas_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Apostas" EntitySet="Apostas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Sorteios_Usuarios" Association="LotericaModel.FK_Sorteios_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Sorteios" EntitySet="Sorteios" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Detalhes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="E_Mail" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Usuarios" Relationship="LotericaModel.FK_Usuarios_Detalhes" FromRole="Detalhes" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Usuario" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Senha" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TipoConta" Type="LotericaModel.IdcTipoConta" Nullable="false" />
+          <Property Name="IdDetalhe" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Detalhes" Relationship="LotericaModel.FK_Usuarios_Detalhes" FromRole="Usuarios" ToRole="Detalhes" />
+          <NavigationProperty Name="Apostas" Relationship="LotericaModel.FK_Apostas_Usuarios" FromRole="Usuarios" ToRole="Apostas" />
+          <NavigationProperty Name="Sorteios" Relationship="LotericaModel.FK_Sorteios_Usuarios" FromRole="Usuarios" ToRole="Sorteios" />
+          </EntityType>
+        <Association Name="FK_Usuarios_Detalhes">
+          <End Type="LotericaModel.Detalhes" Role="Detalhes" Multiplicity="1" />
+          <End Type="LotericaModel.Usuarios" Role="Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Detalhes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="IdDetalhe" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EnumType Name="IdcTipoConta">
+          <Member Name="Usuario" />
+          <Member Name="Administrador" />
+        </EnumType>
+        <EntityType Name="Apostas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="NumeroAposta" Type="Int64" Nullable="false" />
+          <Property Name="NumeroApostaExibicao" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DataAposta" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IdSorteio" Type="Int32" />
+          <NavigationProperty Name="Sorteios" Relationship="LotericaModel.FK_Apostas_Sorteios" FromRole="Apostas" ToRole="Sorteios" />
+          <NavigationProperty Name="Usuarios" Relationship="LotericaModel.FK_Apostas_Usuarios" FromRole="Apostas" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Sorteios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NumeroSorteio" Type="Int64" Nullable="false" />
+          <Property Name="NumeroSorteioExibicao" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DataSorteio" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="ValorPremio" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Apostas" Relationship="LotericaModel.FK_Apostas_Sorteios" FromRole="Sorteios" ToRole="Apostas" />
+          <NavigationProperty Name="Usuarios" Relationship="LotericaModel.FK_Sorteios_Usuarios" FromRole="Sorteios" ToRole="Usuarios" />
+        </EntityType>
+        <Association Name="FK_Apostas_Sorteios">
+          <End Type="LotericaModel.Sorteios" Role="Sorteios" Multiplicity="0..1" />
+          <End Type="LotericaModel.Apostas" Role="Apostas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sorteios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Apostas">
+              <PropertyRef Name="IdSorteio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Apostas_Usuarios">
+          <End Type="LotericaModel.Usuarios" Role="Usuarios" Multiplicity="1" />
+          <End Type="LotericaModel.Apostas" Role="Apostas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Apostas">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Sorteios_Usuarios">
+          <End Type="LotericaModel.Usuarios" Role="Usuarios" Multiplicity="1" />
+          <End Type="LotericaModel.Sorteios" Role="Sorteios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Sorteios">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="LotericaModelStoreContainer" CdmEntityContainer="LotericaEntities">
+          <EntitySetMapping Name="Detalhes">
+            <EntityTypeMapping TypeName="LotericaModel.Detalhes">
+              <MappingFragment StoreEntitySet="Detalhes">
+                <ScalarProperty Name="E_Mail" ColumnName="E_Mail" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="LotericaModel.Usuarios">
+              <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="IdDetalhe" ColumnName="IdDetalhe" />
+                <ScalarProperty Name="TipoConta" ColumnName="TipoConta" />
+                <ScalarProperty Name="Senha" ColumnName="Senha" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Apostas">
+            <EntityTypeMapping TypeName="LotericaModel.Apostas">
+              <MappingFragment StoreEntitySet="Apostas">
+                <ScalarProperty Name="IdSorteio" ColumnName="IdSorteio" />
+                <ScalarProperty Name="DataAposta" ColumnName="DataAposta" />
+                <ScalarProperty Name="NumeroApostaExibicao" ColumnName="NumeroApostaExibicao" />
+                <ScalarProperty Name="NumeroAposta" ColumnName="NumeroAposta" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sorteios">
+            <EntityTypeMapping TypeName="LotericaModel.Sorteios">
+              <MappingFragment StoreEntitySet="Sorteios">
+                <ScalarProperty Name="ValorPremio" ColumnName="ValorPremio" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="DataSorteio" ColumnName="DataSorteio" />
+                <ScalarProperty Name="NumeroSorteioExibicao" ColumnName="NumeroSorteioExibicao" />
+                <ScalarProperty Name="NumeroSorteio" ColumnName="NumeroSorteio" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,23 @@
+﻿
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>Erro!</strong> Verifique os erros abaixo
+        <ul>
+            @foreach (var item in ViewData.ModelState.SelectMany(x => x.Value.Errors))
+            {
+                <li>@item.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+@if (TempData["Erro"]!=null)
+{
+    <div class="alert alert-danger">
+        <strong>Erro!</strong> Verifique os erros abaixo
+        <ul>
+            <li>@TempData["Erro"]</li>
+        </ul>
+    </div>
+}

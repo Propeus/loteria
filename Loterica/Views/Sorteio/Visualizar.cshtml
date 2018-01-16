@@ -1,0 +1,6 @@
+﻿@model Loteria.Models.SorteioViewModel
+@Html.Partial("~/Views/Shared/MenuPartial.cshtml", Model.Usuario)
+
+<div class="text-center"><h3><b>Sorteios</b></h3></div>
+<hr class="divider" />
+@Html.Partial("~/Views/Shared/SorteiosGridPartial.cshtml", Model.Sorteios)

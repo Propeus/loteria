@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="2349082abd5c40b79e256cf6e0b35bbc" Name="Diagram1">
+        <EntityTypeShape EntityType="LotericaModel.Detalhes" Width="1.5" PointX="0.75" PointY="2.875" />
+        <EntityTypeShape EntityType="LotericaModel.Usuarios" Width="1.5" PointX="3" PointY="2.375" />
+        <AssociationConnector Association="LotericaModel.FK_Usuarios_Detalhes" />
+        <EntityTypeShape EntityType="LotericaModel.Apostas" Width="1.5" PointX="7.5" PointY="4" />
+        <EntityTypeShape EntityType="LotericaModel.Sorteios" Width="1.5" PointX="5.25" PointY="5.625" />
+        <AssociationConnector Association="LotericaModel.FK_Apostas_Sorteios" />
+        <AssociationConnector Association="LotericaModel.FK_Apostas_Usuarios" />
+        <AssociationConnector Association="LotericaModel.FK_Sorteios_Usuarios" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

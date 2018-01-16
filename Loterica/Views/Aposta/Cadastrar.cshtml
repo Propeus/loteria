@@ -1,0 +1,73 @@
+﻿@model Loteria.Models.ApostasViewModel
+@Html.Partial("~/Views/Shared/MenuPartial.cshtml", Model.Usuario)
+@Html.Partial("~/Views/Shared/ErroPartial.cshtml")
+<div class="text-center"><h3><b>Cadastrar aposta</b></h3></div>
+<hr class="divider" />
+<div class="form-group">
+    <div id="ajax-form" class="" action="/Aposta/GerarNumeros" method="post" role="form" autocomplete="off">
+        <div class="container col-lg-9 col-lg-offset-4">
+            <label>Numeros: </label>
+            <div class="form-group form-inline">
+                <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
+                <label>-</label>
+                <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
+                <label>-</label>
+                <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
+                <label>-</label>
+                <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
+                <label>-</label>
+                <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
+                <label>-</label>
+                <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
+                <div class="form-group">
+                    <input type="button" name="register-submit" id="register-submit" form="ajax-form" class="btn btn-info btnGerar" value="Gerar numeros">
+                    <input type="submit" name="register-submit" id="register-submit" form="form-regstro" class="btn btn-info btnRegistrar" value="Registrar aposta">
+                </div>
+
+
+                <div class="container col-lg-6 col-lg-offset-4 form-inline form-group">
+                    <form action="/Aposta/RegistrarNumeros" method="post" id="form-regstro">
+                        @Html.HiddenFor(x=> x.Aposta.NumeroAposta)
+                        @Html.HiddenFor(x=> x.Aposta.NumeroApostaExibicao)
+                    </form>
+                </div>
+            </div>
+        </div>
+        @Html.ValidationMessageFor(x => x.Usuario, null, new { @class = "label label-danger" })
+    </div>
+</div>
+<br />
+<br />
+<br />
+<hr class="divider" />
+@Html.Partial("~/Views/Shared/ApostasGridPartial.cshtml", Model.Apostas)
+
+<script>
+    $(".btnGerar").click(function () {
+        var form = $("#" + $(this).attr('form'));
+        var url = $(form).attr("action");
+        var method = $(form).attr("method");
+        $.ajax({
+            url: url,
+            method: method,
+            success: function (e) {
+                var numerosSoretiosInput = $(".NumeroSorteio");
+                for (var i = 0; i < numerosSoretiosInput.length; i++) {
+                    $(numerosSoretiosInput[i]).val(e.Numeros[i]);
+                }
+                $("#Aposta_NumeroAposta").val(e.Numeros.join(''));
+                $("#Aposta_NumeroApostaExibicao").val(e.Numeros.join('-'));
+            }
+        })
+    })
+    $('.NumeroSorteio').change(function () {
+        var numerosSoretiosInput = $(".NumeroSorteio");
+        var numeros = [];
+        for (var i = 0; i < numerosSoretiosInput.length; i++) {
+            numeros[i]=$(numerosSoretiosInput[i]).val();
+        }
+        $("#Aposta_NumeroAposta").val(numeros.join(''));
+        $("#Aposta_NumeroApostaExibicao").val(numeros.join('-'));
+    })
+</script>
+
