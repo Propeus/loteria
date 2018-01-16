@@ -19,9 +19,10 @@ namespace Loteria.Controllers
         UsuarioService UsuarioService;
         public ApostaController()
         {
+            
             sorteioService = new SorteioService();
-            apostaService = new ApostaService(sorteioService.sorteioRepository.RepositoryFactory);
-            UsuarioService = new UsuarioService(sorteioService.sorteioRepository.RepositoryFactory);
+            apostaService = new ApostaService(sorteioService.Repository.RepositoryFactory);
+            UsuarioService = new UsuarioService(sorteioService.Repository.RepositoryFactory);
         }
 
         [HttpPost]
@@ -40,7 +41,7 @@ namespace Loteria.Controllers
                 if (ModelState.IsValid)
                 {
                     model.Aposta.DataAposta = DateTime.Now;
-                    model.Aposta.Usuarios = UsuarioService.usuarioRepository.RecuperarPorId((Session["User"] as Usuarios).Id);
+                    model.Aposta.Usuarios = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
                     apostaService.InserirAposta(model.Aposta);
                 }
             }
@@ -80,7 +81,7 @@ namespace Loteria.Controllers
 
         private void InicializarModel(ApostasViewModel model)
         {
-            model.Usuario = UsuarioService.usuarioRepository.RecuperarPorId((Session["User"] as Usuarios).Id);
+            model.Usuario = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
             model.Apostas = apostaService.RecuperarResultadosPorAno(model.Usuario, DateTime.Now.Year).ToList();
         }
 

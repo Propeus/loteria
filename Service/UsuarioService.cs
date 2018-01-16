@@ -10,24 +10,22 @@ using System.Transactions;
 
 namespace Service
 {
-    public class UsuarioService
+    public class UsuarioService : GenericoService<UsuariosRepository>
     {
 
         public UsuarioService()
         {
-            usuarioRepository = new UsuariosRepository();
-        }
-        public UsuarioService(DbContext repositoryFactory)
-        {
-            usuarioRepository = new UsuariosRepository(repositoryFactory);
-        }
 
-        public UsuariosRepository usuarioRepository { get; private set; }
+        }
+        public UsuarioService(DbContext repositoryFactory) : base(repositoryFactory)
+        {
+
+        }
 
         public Usuarios Login(string login, string senha)
         {
             senha = Hash(senha);
-            var usuario = usuarioRepository.Recuperar(x => x.Usuario == login && x.Senha == senha);
+            var usuario = Repository.Recuperar(x => x.Usuario == login && x.Senha == senha);
             return usuario;
 
         }
@@ -46,7 +44,7 @@ namespace Service
             };
             using (TransactionScope scope = new TransactionScope())
             {
-                usuarioRepository.Inserir(usuario);
+                Repository.Inserir(usuario);
                 scope.Complete();
             }
             return usuario;

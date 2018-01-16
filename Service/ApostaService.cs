@@ -11,28 +11,22 @@ using Service.Model;
 
 namespace Service
 {
-    public class ApostaService
+    public class ApostaService : GenericoService<ApostasRepository>
     {
 
         private int NumerosQuantidade { get; set; } = 6;
         private int NumeroMinimo { get; set; } = 0;
         private int NumeroMaximo { get; set; } = 60;
 
-        public ApostasRepository apostasRepository { get; private set; }
+     
         SorteioService sorteioService { get; set; }
 
-        public DbContext repositoryFactory { get; private set; }
         public ApostaService()
         {
-            apostasRepository = new ApostasRepository();
-            sorteioService = new SorteioService(apostasRepository.RepositoryFactory);
-            this.repositoryFactory = apostasRepository.RepositoryFactory;
-
+            sorteioService = new SorteioService(Repository.RepositoryFactory);
         }
-        public ApostaService(DbContext repositoryFactory)
+        public ApostaService(DbContext repositoryFactory) : base(repositoryFactory)
         {
-            this.repositoryFactory = repositoryFactory;
-            apostasRepository = new ApostasRepository(repositoryFactory);
             sorteioService = new SorteioService(repositoryFactory);
         }
 
@@ -91,7 +85,7 @@ namespace Service
             };
             using (TransactionScope scope = new TransactionScope())
             {
-                apostasRepository.Inserir(apostas);
+                Repository.Inserir(apostas);
                 scope.Complete();
             }
             return apostas;
@@ -109,7 +103,7 @@ namespace Service
             ValidarRegraNegocio(aposta);
             using (TransactionScope scope = new TransactionScope())
             {
-                apostasRepository.Inserir(aposta);
+                Repository.Inserir(aposta);
                 scope.Complete();
             }
 
@@ -121,7 +115,7 @@ namespace Service
 
             using (TransactionScope scope = new TransactionScope())
             {
-                apostasRepository.Inserir(aposta);
+                Repository.Inserir(aposta);
                 scope.Complete();
             }
             return aposta;
@@ -132,30 +126,30 @@ namespace Service
         public List<Usuarios> RecuperarUsuariosApostas(int[] numeros)
         {
             int numeroaposta = Convert.ToInt32(string.Concat("", numeros));
-            var resultado = apostasRepository.RecuperarVarios(x => x.NumeroAposta == numeroaposta).Include(x => x.Usuarios);
+            var resultado = Repository.RecuperarVarios(x => x.NumeroAposta == numeroaposta).Include(x => x.Usuarios);
             return resultado.Select(x => x.Usuarios).ToList();
         }
         public List<Apostas> RecuperarApostas(Usuarios usuario)
         {
-            return apostasRepository.RecuperarPorUsuario(usuario.Id).Include(x => x.Sorteios).ToList();
+            return Repository.RecuperarPorUsuario(usuario.Id).Include(x => x.Sorteios).ToList();
         }
         public List<Apostas> RecuperarApostasPorMes(Usuarios usuario, int ano)
         {
             if (ano > 12 && ano < 1)
                 throw new ArgumentOutOfRangeException("Mes", ano, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
 
-            return apostasRepository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Month == ano).ToList();
+            return Repository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Month == ano).ToList();
         }
         public List<Apostas> RecuperarApostasPorAno(Usuarios usuario, int ano)
         {
-            return apostasRepository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Year == ano).ToList();
+            return Repository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Year == ano).ToList();
         }
         public List<Apostas> RecuperarApostasPorMesAno(Usuarios usuario, int mes, int ano)
         {
             if (mes > 12 && mes < 1)
                 throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
 
-            return apostasRepository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Month == mes && x.DataAposta.Year == ano).ToList();
+            return Repository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Month == mes && x.DataAposta.Year == ano).ToList();
         }
         public List<ResultadoAposta> RecuperarResultados(Usuarios usuario)
         {

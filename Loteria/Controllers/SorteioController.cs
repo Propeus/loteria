@@ -18,8 +18,8 @@ namespace Loteria.Controllers
         public SorteioController()
         {
             sorteioService = new SorteioService();
-            apostaService = new ApostaService(sorteioService.sorteioRepository.RepositoryFactory);
-            UsuarioService = new UsuarioService(sorteioService.sorteioRepository.RepositoryFactory);
+            apostaService = new ApostaService(sorteioService.Repository.RepositoryFactory);
+            UsuarioService = new UsuarioService(sorteioService.Repository.RepositoryFactory);
         }
 
         [HttpPost]
@@ -42,7 +42,7 @@ namespace Loteria.Controllers
                 if (ModelState.IsValid)
                 {
                     model.Sorteio.DataSorteio = DateTime.Now;
-                    model.Sorteio.Usuarios = UsuarioService.usuarioRepository.RecuperarPorId((Session["User"] as Usuarios).Id);
+                    model.Sorteio.Usuarios = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
                     sorteioService.RegistrarSorteio(model.Sorteio);
                 }
             }
@@ -70,15 +70,15 @@ namespace Loteria.Controllers
 
         private void InicializarModel(SorteioViewModel model)
         {
-            model.Usuario = UsuarioService.usuarioRepository.RecuperarPorId((Session["User"] as Usuarios).Id);
-            model.Sorteios = sorteioService.sorteioRepository.RecuperarPorAno(DateTime.Now.Year).ToList();
+            model.Usuario = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
+            model.Sorteios = sorteioService.Repository.RecuperarPorAno(DateTime.Now.Year).ToList();
         }
 
         public ActionResult Visualizar()
         {
 
             sorteioViewModel.Usuario = Session["User"] as Usuarios ?? new Usuarios();
-            sorteioViewModel.Sorteios = sorteioService.sorteioRepository.RecuperarPorAno(DateTime.Now.Year).ToList();
+            sorteioViewModel.Sorteios = sorteioService.Repository.RecuperarPorAno(DateTime.Now.Year).ToList();
             return View(sorteioViewModel);
         }
     }
