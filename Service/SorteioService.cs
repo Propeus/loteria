@@ -7,6 +7,9 @@ using System.Transactions;
 
 namespace Service
 {
+    /// <summary>
+    /// Serviço para a entidade <see cref="Sorteios"/>
+    /// </summary>
     public class SorteioService : GenericoService<SorteioRepository>
     {
         private int NumerosQuantidade { get; set; } = 6;
@@ -16,36 +19,29 @@ namespace Service
 
         ApostasRepository apostasRepository { get; set; }
 
+        /// <summary>
+        /// Instacia do serviço criando um novo contexto para o repositório
+        /// </summary>
         public SorteioService()
         {
             apostasRepository = new ApostasRepository(Repository.RepositoryFactory);
         }
+        /// <summary>
+        /// Instacia do serviço utilizando um contexto já existente
+        /// </summary>
+        /// <param name="repositoryFactory">Contexto de algum repositório ja instanciado</param>
         public SorteioService(DbContext repositoryFactory) : base(repositoryFactory)
         {
             apostasRepository = new ApostasRepository(Repository.RepositoryFactory);
 
         }
 
-
-        public List<Sorteios> RecuperarApostasPorMes(int mes)
-        {
-            if (mes > 12 && mes < 1)
-                throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
-
-            return Repository.RecuperarPorMes(mes).ToList();
-        }
-        public List<Sorteios> RecuperarApostasPorAno(int ano)
-        {
-            return Repository.RecuperarPorAno(ano).ToList();
-        }
-        public List<Sorteios> RecuperarApostasPorMesAno(int mes, int ano)
-        {
-            if (mes > 12 && mes < 1)
-                throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
-
-            return Repository.RecuperarVarios(x => x.DataSorteio.Month == mes && x.DataSorteio.Year == ano).ToList();
-        }
-        public Sorteios RegistrarSorteio(Sorteios sorteios)
+        /// <summary>
+        /// Insere um novo sorteio
+        /// </summary>
+        /// <param name="sorteios">Modelo preenchido</param>
+        /// <returns><see cref="Sorteios"/></returns>
+        public Sorteios InserirSorteio(Sorteios sorteios)
         {
             ValidarRegraNegocio(sorteios);
             using (TransactionScope scope = new TransactionScope())
@@ -62,6 +58,42 @@ namespace Service
             }
             return sorteios;
         }
+
+        /// <summary>
+        /// Obtem um conjunto de <see cref="Sorteios"/> utilizando o mês do sorteio.
+        /// </summary>
+        /// <param name="mes">Mês do sorteio</param>
+        /// <returns><see cref="Sorteios"/></returns>
+        public List<Sorteios> RecuperarSorteiosPorMes(int mes)
+        {
+            if (mes > 12 && mes < 1)
+                throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
+
+            return Repository.RecuperarPorMes(mes).ToList();
+        }
+        /// <summary>
+        /// Obtem um conjunto de <see cref="Sorteios"/> utilizando o ano do sorteio.
+        /// </summary>
+        /// <param name="ano">Ano do sorteio</param>
+        /// <returns><see cref="Sorteios"/></returns>
+        public List<Sorteios> RecuperarSorteiosPorAno(int ano)
+        {
+            return Repository.RecuperarPorAno(ano).ToList();
+        }
+        /// <summary>
+        /// Obtem um conjunto de <see cref="Sorteios"/> utilizando o mes e ano do sorteio.
+        /// </summary>
+        /// <param name="mes">Mês do sorteio</param>
+        /// <param name="ano">Ano do sorteio</param>
+        /// <returns><see cref="Sorteios"/></returns>
+        public List<Sorteios> RecuperarSorteiosPorMesAno(int mes, int ano)
+        {
+            if (mes > 12 && mes < 1)
+                throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
+
+            return Repository.RecuperarPorMesAno(mes, ano).ToList();
+        }
+
         private void ValidarRegraNegocio(Sorteios sorteios)
         {
             if (sorteios.NumeroSorteioExibicao == null)
@@ -75,25 +107,6 @@ namespace Service
 
             if (!PossuiQuantidadeNumeros(sorteios, NumerosQuantidade))
                 throw new Exception($"Deve ser preenchido somente {NumerosQuantidade} valores");
-        }
-
-        public List<Sorteios> RecuperarPorAno(int ano)
-        {
-            return Repository.RecuperarPorAno(ano).ToList();
-        }
-        public List<Sorteios> RecuperarPorMes(int mes)
-        {
-            if (mes > 12 && mes < 1)
-                throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
-
-            return Repository.RecuperarPorMes(mes).ToList();
-        }
-        public List<Sorteios> RecuperarPorMesAno(int mes, int ano)
-        {
-            if (mes > 12 && mes < 1)
-                throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
-
-            return Repository.RecuperarPorMesAno(mes, ano).ToList();
         }
 
         private bool PossuiQuantidadeNumeros(Sorteios sorteios, int qtdNumeros)
@@ -122,7 +135,6 @@ namespace Service
             }
             return false;
         }
-
         private Sorteios SortearValor()
         {
             var resultado = Helper.Helper.SortearValores(NumerosQuantidade, NumeroMinimo, NumeroMaximo);
@@ -138,7 +150,7 @@ namespace Service
 
             return sorteo;
         }
-        public Apostas AvaliarAcertos(Apostas aposta)
+        private Apostas AvaliarAcertos(Apostas aposta)
         {
             string[] numerosSorteio = aposta.Sorteios?.NumeroSorteioExibicao.Split('-');
             if (numerosSorteio == null)

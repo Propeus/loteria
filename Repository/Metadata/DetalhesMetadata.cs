@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Repository.Metadata
 {
+    /// <summary>
+    /// Metadados da entidade <see cref="Detalhes"/>
+    /// </summary>
     public partial class DetalhesMetadata
     {
         [Required(ErrorMessage ="O campo e-mail é obrigatório")]

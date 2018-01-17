@@ -13,19 +13,12 @@ namespace Loteria.Controllers
     public class SorteioController : GenericoController
     {
         SorteioViewModel sorteioViewModel = new SorteioViewModel();
-       
+
         #region Serviços
         SorteioService sorteioService;
         ApostaService apostaService;
         UsuarioService UsuarioService;
         #endregion
-
-        public SorteioController()
-        {
-            sorteioService = new SorteioService();
-            apostaService = new ApostaService(sorteioService.Repository.RepositoryFactory);
-            UsuarioService = new UsuarioService(sorteioService.Repository.RepositoryFactory);
-        }
 
         [HttpPost]
         public JsonResult GerarNumeros()
@@ -38,15 +31,20 @@ namespace Loteria.Controllers
         [HttpPost]
         public ActionResult RegistrarNumeros(SorteioViewModel model)
         {
-           
-
             try
             {
                 if (ModelState.IsValid)
                 {
-                    model.Sorteio.DataSorteio = DateTime.Now;
-                    model.Sorteio.Usuarios = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
-                    sorteioService.RegistrarSorteio(model.Sorteio);
+
+                    using (sorteioService = new SorteioService())
+                    {
+                        using (UsuarioService = new UsuarioService(sorteioService.Repository.RepositoryFactory))
+                        {
+                            model.Sorteio.DataSorteio = DateTime.Now;
+                            model.Sorteio.Usuarios = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
+                            sorteioService.InserirSorteio(model.Sorteio);
+                        }
+                    }
                 }
             }
             catch (AggregateException ex)
@@ -58,47 +56,65 @@ namespace Loteria.Controllers
                 TempData["Erro"] = ex.Message;
             }
             InicializarModel(model);
-            return View("Cadastrar",model);
+            return View("Cadastrar", model);
         }
 
         [RequerSessao("Inicio", "Painel")]
         public ActionResult Cadastrar()
         {
-            
+
             InicializarModel(sorteioViewModel);
             return View(sorteioViewModel);
         }
 
         public ActionResult Visualizar()
         {
+            using (sorteioService = new SorteioService())
+            {
+                sorteioViewModel.Sorteios = sorteioService.Repository.RecuperarPorAno(DateTime.Now.Year).ToList();
+            }
             sorteioViewModel.Usuario = Session["User"] as Usuarios ?? new Usuarios();
-            sorteioViewModel.Sorteios = sorteioService.Repository.RecuperarPorAno(DateTime.Now.Year).ToList();
             return View(sorteioViewModel);
         }
 
         [HttpPost]
         public ActionResult Pesquisar(PesquisaViewModel model)
         {
-            InicializarModel(sorteioViewModel);
-            if (model.Ano != 0 && model.Mes != 0)
+            using (sorteioService = new SorteioService())
             {
-                sorteioViewModel.Sorteios = sorteioService.RecuperarPorMesAno(model.Mes, model.Ano);
+
+                if (model.Ano != 0 && model.Mes != 0)
+                {
+                    sorteioViewModel.Sorteios = sorteioService.RecuperarSorteiosPorMesAno(model.Mes, model.Ano);
+                }
+                else if (model.Ano != 0)
+                {
+                    sorteioViewModel.Sorteios = sorteioService.RecuperarSorteiosPorAno(model.Ano);
+                }
+                else if (model.Mes != 0)
+                {
+                    sorteioViewModel.Sorteios = sorteioService.RecuperarSorteiosPorMes(model.Mes);
+                }
+                else
+                {
+                    sorteioViewModel.Sorteios = sorteioService.RecuperarSorteiosPorAno(DateTime.Now.Year);
+
+                }
             }
-            else if (model.Ano != 0)
-            {
-                sorteioViewModel.Sorteios = sorteioService.RecuperarPorAno(model.Ano);
-            }
-            else
-            {
-                sorteioViewModel.Sorteios = sorteioService.RecuperarPorMes(model.Mes);
-            }
+            sorteioViewModel.Usuario = (Session["User"] as Usuarios) ?? new Usuarios();
             return View("Visualizar", sorteioViewModel);
         }
 
         private void InicializarModel(SorteioViewModel model)
         {
-            model.Usuario = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
-            model.Sorteios = sorteioService.Repository.RecuperarPorAno(DateTime.Now.Year).ToList();
+            using (UsuarioService = new UsuarioService())
+            {
+                using (sorteioService = new SorteioService(UsuarioService.Repository.RepositoryFactory))
+                {
+                    model.Usuario = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
+                    model.Sorteios = sorteioService.Repository.RecuperarPorAno(DateTime.Now.Year).ToList();
+                }
+            }
         }
     }
 }

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Repository.Metadata
 {
-
+    /// <summary>
+    /// Metadados da entidade <see cref="Usuarios"/>
+    /// </summary>
     public partial class UsuariosMetadata
     {
         [StringLength(50, ErrorMessage = "O tamanho do nome deve ser menor que 50 caracteres")]

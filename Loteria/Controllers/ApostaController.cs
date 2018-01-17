@@ -17,18 +17,9 @@ namespace Loteria.Controllers
         ApostasViewModel apostasViewModel = new ApostasViewModel();
 
         #region Serviços
-        SorteioService sorteioService;
         ApostaService apostaService;
         UsuarioService UsuarioService;
         #endregion
-
-        public ApostaController()
-        {
-
-            sorteioService = new SorteioService();
-            apostaService = new ApostaService(sorteioService.Repository.RepositoryFactory);
-            UsuarioService = new UsuarioService(sorteioService.Repository.RepositoryFactory);
-        }
 
         [RequerSessao("Inicio", "Painel")]
         [HttpPost]
@@ -47,9 +38,14 @@ namespace Loteria.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    model.Aposta.DataAposta = DateTime.Now;
-                    model.Aposta.Usuarios = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
-                    apostaService.InserirAposta(model.Aposta);
+                    using (UsuarioService = new UsuarioService())
+                    {
+                        apostaService = new ApostaService(UsuarioService.Repository.RepositoryFactory);
+                        model.Aposta.DataAposta = DateTime.Now;
+                        model.Aposta.Usuarios = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
+                        apostaService.InserirAposta(model.Aposta);
+
+                    }
                 }
             }
             catch (AggregateException ex)
@@ -85,29 +81,42 @@ namespace Loteria.Controllers
         public ActionResult Pesquisar(PesquisaViewModel model)
         {
             InicializarModel(apostasViewModel);
-            if (model.Ano != 0 && model.Mes != 0)
+            using (UsuarioService = new UsuarioService())
             {
-                apostasViewModel.Apostas = apostaService.RecuperarApostasPorMesAno(apostasViewModel.Usuario, model.Mes, model.Ano);
+                using (apostaService = new ApostaService(UsuarioService.Repository.RepositoryFactory))
+                {
+                    if (model.Ano != 0 && model.Mes != 0)
+                    {
+                        apostasViewModel.Apostas = apostaService.RecuperarApostasPorMesAno(apostasViewModel.Usuario, model.Mes, model.Ano);
+                    }
+                    else if (model.Ano != 0)
+                    {
+                        apostasViewModel.Apostas = apostaService.RecuperarApostasPorAno(apostasViewModel.Usuario, model.Ano);
+                    }
+                    else if (model.Mes != 0)
+                    {
+                        apostasViewModel.Apostas = apostaService.RecuperarApostasPorMes(apostasViewModel.Usuario, model.Mes);
+                    }
+                    else if (model.Acertos != 0)
+                    {
+                        apostasViewModel.Apostas = apostaService.RecuperarPorAcertos(apostasViewModel.Usuario, model.Acertos);
+                    }
+                }
             }
-            else if (model.Ano != 0)
-            {
-                apostasViewModel.Apostas = apostaService.RecuperarApostasPorAno(apostasViewModel.Usuario, model.Ano);
-            }
-            else if (model.Mes != 0)
-            {
-                apostasViewModel.Apostas = apostaService.RecuperarApostasPorMes(apostasViewModel.Usuario, model.Mes);
-            }
-            else if (model.Acertos != 0)
-            {
-                apostasViewModel.Apostas = apostaService.RecuperarPorAcertos(apostasViewModel.Usuario, model.Acertos);
-            }
+
             return View("Visualizar", apostasViewModel);
         }
 
         private void InicializarModel(ApostasViewModel model)
         {
-            model.Usuario = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
-            model.Apostas = apostaService.RecuperarApostasPorAno(model.Usuario, DateTime.Now.Year).ToList();
+            using (UsuarioService = new UsuarioService())
+            {
+                using (apostaService = new ApostaService(UsuarioService.Repository.RepositoryFactory))
+                {
+                    model.Usuario = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
+                    model.Apostas = apostaService.RecuperarApostasPorAno(model.Usuario, DateTime.Now.Year).ToList();
+                }
+            }
         }
 
 

@@ -1,43 +1,45 @@
 ﻿@model Loteria.Models.ApostasViewModel
 @Html.Partial("~/Views/Shared/MenuPartial.cshtml", Model.Usuario)
-<div class="text-center"><h3><b>Cadastrar aposta</b></h3></div>
-<hr class="divider" />
-<div class="form-group">
-    <div id="ajax-form" class="" action="/Aposta/GerarNumeros" method="post" role="form" autocomplete="off">
-        <div class="container col-lg-9 col-lg-offset-4">
-            <label>Numeros: </label>
-            <div class="form-group form-inline">
-                <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
-                <label>-</label>
-                <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
-                <label>-</label>
-                <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
-                <label>-</label>
-                <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
-                <label>-</label>
-                <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
-                <label>-</label>
-                <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
-                <div class="form-group">
-                    <input type="button" name="register-submit" id="register-submit" form="ajax-form" class="btn btn-info btnGerar" value="Surpresinha">
-                    <input type="submit" name="register-submit" id="register-submit" form="form-regstro" class="btn btn-info btnRegistrar" value="Registrar aposta">
-                </div>
+<div class="container">
+    <div class="panel panel-primary ">
+        <div class="panel-heading">Cadastrar aposta</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div id="ajax-form" class="" action="/Aposta/GerarNumeros" method="post" role="form" autocomplete="off">
+                    <div class="col-lg-9 col-lg-offset-3">
+                        <label>Numeros: </label>
+                        <div class="form-group form-inline">
+                            <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
+                            <label>-</label>
+                            <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
+                            <label>-</label>
+                            <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
+                            <label>-</label>
+                            <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
+                            <label>-</label>
+                            <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
+                            <label>-</label>
+                            <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
+                            <div class="form-group">
+                                <input type="button" name="register-submit" id="register-submit" form="ajax-form" class="btn btn-info btnGerar" value="Surpresinha">
+                                <input type="submit" name="register-submit" id="register-submit" form="form-regstro" class="btn btn-info btnRegistrar" value="Registrar aposta">
+                            </div>
 
 
-                <div class="container col-lg-6 col-lg-offset-4 form-inline form-group">
-                    <form action="/Aposta/RegistrarNumeros" method="post" id="form-regstro">
-                        @Html.HiddenFor(x => x.Aposta.NumeroAposta, new { @class = "SorteioAposta" })
-                        @Html.HiddenFor(x => x.Aposta.NumeroApostaExibicao, new { @class = "SorteioApostaExibicao" })
-                    </form>
+                            <div class="container col-lg-6 col-lg-offset-4 form-inline form-group">
+                                <form action="/Aposta/RegistrarNumeros" method="post" id="form-regstro">
+                                    @Html.HiddenFor(x => x.Aposta.NumeroAposta, new { @class = "SorteioAposta" })
+                                    @Html.HiddenFor(x => x.Aposta.NumeroApostaExibicao, new { @class = "SorteioApostaExibicao" })
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @Html.ValidationMessageFor(x => x.Usuario, null, new { @class = "label label-danger" })
                 </div>
             </div>
         </div>
-        @Html.ValidationMessageFor(x => x.Usuario, null, new { @class = "label label-danger" })
     </div>
 </div>
-<br />
-<br />
-<br />
 <hr class="divider" />
 @Html.Partial("~/Views/Shared/ApostasGridPartial.cshtml", Model.Apostas)
 @Scripts.Render("~/bundles/site")

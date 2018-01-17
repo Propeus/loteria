@@ -13,29 +13,26 @@ namespace Loteria.Controllers
     {
 
         PainelModelViewModel painelModel = new PainelModelViewModel();
-        
+
         #region Serviços
-        SorteioRepository sorteioRepository;
         UsuarioService usuarioService;
         #endregion
 
-        public UsuarioController()
-        {
-            sorteioRepository = new SorteioRepository();
-            usuarioService = new UsuarioService(sorteioRepository.RepositoryFactory);
-        }
-  
         [HttpPost]
         public JsonResult Login(Usuarios usuarios)
         {
             if (ModelState.IsValidField("Usuario") && ModelState.IsValidField("Senha"))
             {
-                var user = usuarioService.Login(usuarios.Usuario, usuarios.Senha);
-                Session["User"] = user;
-                if (user != null)
-                    return Json(new { Sucesso = true });
+                using (usuarioService = new UsuarioService())
+                {
+                    var user = usuarioService.Login(usuarios.Usuario, usuarios.Senha);
+                    Session["User"] = user;
+
+                    if (user != null)
+                        return Json(new { Sucesso = true });
+                }
             }
-            return Json(new { Sucesso = false, Mensagens= new List<string> { "Login e/ou senha incoreto(s)." } });
+            return Json(new { Sucesso = false, Mensagens = new List<string> { "Login e/ou senha incoreto(s)." } });
         }
 
         [HttpPost]
@@ -43,10 +40,13 @@ namespace Loteria.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = usuarioService.Registrar(usuarios.Usuario, usuarios.Senha, usuarios.Detalhes.E_Mail);
-                Session["User"] = user;
-                if (user != null)
-                    return Json(new { Sucesso = true });
+                using (usuarioService = new UsuarioService())
+                {
+                    var user = usuarioService.Registrar(usuarios.Usuario, usuarios.Senha, usuarios.Detalhes.E_Mail);
+                    Session["User"] = user;
+                    if (user != null)
+                        return Json(new { Sucesso = true });
+                }
             }
             return Json(new { Sucesso = false, Mensagens = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
         }

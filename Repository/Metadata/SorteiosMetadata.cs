@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Repository.Metadata
 {
-   public class SorteiosMetadata
+    /// <summary>
+    /// Metadados da entidade <see cref="Sorteios"/>
+    /// </summary>
+    public class SorteiosMetadata
     {
         [Required(ErrorMessage ="É obrigatório preencher os numeros do sorteio")]
         public long NumeroSorteio { get; set; }
