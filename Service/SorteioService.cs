@@ -76,6 +76,25 @@ namespace Service
                 throw new Exception($"Deve ser preenchido somente {NumerosQuantidade} valores");
         }
 
+        public List<Sorteios> RecuperarPorAno(int ano)
+        {
+            return Repository.RecuperarPorAno(ano).ToList();
+        }
+        public List<Sorteios> RecuperarPorMes(int mes)
+        {
+            if (mes > 12 && mes < 1)
+                throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
+
+            return Repository.RecuperarPorMes(mes).ToList();
+        }
+        public List<Sorteios> RecuperarPorMesAno(int mes, int ano)
+        {
+            if (mes > 12 && mes < 1)
+                throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
+
+            return Repository.RecuperarPorMesAno(mes,ano).ToList();
+        }
+
         private bool PossuiQuantidadeNumeros(Sorteios sorteios, int qtdNumeros)
         {
             var numeros = sorteios.NumeroSorteioExibicao?.Split('-');

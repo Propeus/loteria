@@ -121,7 +121,10 @@ namespace Service
             return aposta;
         }
 
-
+        public List<ResultadoAposta> RecuperarResultadosPorAcertos(Usuarios usuario, int acertos)
+        {
+             return RecuperarResultados(usuario).Where(x => x.Acertos == acertos).ToList();
+        }
 
         public List<Usuarios> RecuperarUsuariosApostas(int[] numeros)
         {
@@ -133,12 +136,12 @@ namespace Service
         {
             return Repository.RecuperarPorUsuario(usuario.Id).Include(x => x.Sorteios).ToList();
         }
-        public List<Apostas> RecuperarApostasPorMes(Usuarios usuario, int ano)
+        public List<Apostas> RecuperarApostasPorMes(Usuarios usuario, int mes)
         {
-            if (ano > 12 && ano < 1)
-                throw new ArgumentOutOfRangeException("Mes", ano, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
+            if (mes > 12 && mes < 1)
+                throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
 
-            return Repository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Month == ano).ToList();
+            return Repository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Month == mes).ToList();
         }
         public List<Apostas> RecuperarApostasPorAno(Usuarios usuario, int ano)
         {

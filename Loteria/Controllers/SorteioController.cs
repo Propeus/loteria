@@ -76,6 +76,25 @@ namespace Loteria.Controllers
             return View(sorteioViewModel);
         }
 
+        [HttpPost]
+        public ActionResult Pesquisar(PesquisaViewModel model)
+        {
+            InicializarModel(sorteioViewModel);
+            if (model.Ano != 0 && model.Mes != 0)
+            {
+                sorteioViewModel.Sorteios = sorteioService.RecuperarPorMesAno(model.Mes, model.Ano);
+            }
+            else if (model.Ano != 0)
+            {
+                sorteioViewModel.Sorteios = sorteioService.RecuperarPorAno(model.Ano);
+            }
+            else
+            {
+                sorteioViewModel.Sorteios = sorteioService.RecuperarPorMes(model.Mes);
+            }
+            return View("Visualizar", sorteioViewModel);
+        }
+
         private void InicializarModel(SorteioViewModel model)
         {
             model.Usuario = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);

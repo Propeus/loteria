@@ -33,12 +33,12 @@
 
     <label>Valor do premio: </label>
     <form action="/Sorteio/RegistrarNumeros" method="post" id="form-regstro">
-        @Html.HiddenFor(x => x.Sorteio.NumeroSorteio)
-        @Html.HiddenFor(x => x.Sorteio.NumeroSorteioExibicao)
+        @Html.HiddenFor(x => x.Sorteio.NumeroSorteio, new { @class = "SorteioAposta" })
+        @Html.HiddenFor(x => x.Sorteio.NumeroSorteioExibicao, new { @class = "SorteioApostaExibicao" })
         <div class="form-group">
             <div class="input-group">
                 <span class="input-group-addon">R$</span>
-                @Html.TextBoxFor(x=> x.Sorteio.ValorPremio,new {@class= "form-control ValorSorteio",@style= "width:310px" ,value="0"})
+                @Html.TextBoxFor(x => x.Sorteio.ValorPremio, new { @class = "form-control ValorSorteio", @style = "width:310px", value = "0" })
             </div>
 
         </div>
@@ -46,9 +46,6 @@
             <input type="submit" name="register-submit" id="register-submit" class="btn btn-info btnRegistrar" value="Registrar sorteio">
         </div>
     </form>
-</div>
-<div class="form-group erroMensagem">
-
 </div>
 <br />
 <br />
@@ -61,31 +58,8 @@
 <div class="form-group">
     <hr class="divider" />
 </div>
+
 @Html.Partial("~/Views/Shared/SorteiosGridPartial.cshtml", Model.Sorteios)
+@Scripts.Render("~/bundles/site")
 
-<script>
-    $(".btnGerar").click(function () {
-        var form = $("#" + $(this).attr('form'));
-        var url = $(form).attr("action");
-        var method = $(form).attr("method");
-        $.ajax({
-            url: url,
-            method: method,
-            success: function (e) {
-                var numerosSoretiosInput = $(".NumeroSorteio");
-                for (var i = 0; i < numerosSoretiosInput.length; i++) {
-                    $(numerosSoretiosInput[i]).val(e.Numeros[i]);
-                }
-                $("#Sorteio_NumeroSorteio").val(e.Numeros.join(''));
-                $("#Sorteio_NumeroSorteioExibicao").val(e.Numeros.join('-'));
-            }
-        })
-    })
-
-
-    $(".menu li").click(function () {
-        $('.menu').removeAttr('active');
-        $(this).attr('active');
-    })
-</script>
 

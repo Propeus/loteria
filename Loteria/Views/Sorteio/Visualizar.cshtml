@@ -3,4 +3,30 @@
 
 <div class="text-center"><h3><b>Sorteios</b></h3></div>
 <hr class="divider" />
+<div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Pesquisar</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <form action="/Sorteio/Pesquisar" method="post" role="form" autocomplete="off">
+                    <div class="container col-lg-6 col-lg-offset-4">
+                        <div class="form-group form-inline">
+                            <label>Mes: </label>
+                            <input type="number" class="form-control" name="Mes" id="Mes" max="12" min="0" style="width:60px" value="0" />
+                            <label>Ano: </label>
+                            <input type="number" class="form-control" name="Ano" id="Ano" min="0" style="width:7vw" value="0" />
+                            <div class="form-group">
+                                <input type="submit" name="register-submit" id="register-submit" class="btn btn-info btnPesquisar" value="Pesquisar">
+                            </div>
+                        </div>
+                    </div>
+                    @Html.ValidationMessageFor(x => x.Usuario, null, new { @class = "label label-danger" })
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="divider" />
+
 @Html.Partial("~/Views/Shared/SorteiosGridPartial.cshtml", Model.Sorteios)

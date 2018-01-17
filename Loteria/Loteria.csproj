@@ -152,6 +152,7 @@
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\site.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -173,6 +174,7 @@
     <Compile Include="Helper\Helper.cs" />
     <Compile Include="Models\PainelModelViewModel.cs" />
     <Compile Include="Models\ApostaViewModel.cs" />
+    <Compile Include="Models\PesquisaViewModel.cs" />
     <Compile Include="Models\SorteioViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -188,6 +190,7 @@
     <Content Include="Views\Sorteio\Visualizar.cshtml" />
     <Content Include="Views\Shared\ErroPartial.cshtml" />
     <Content Include="Views\Aposta\Visualizar.cshtml" />
+    <Content Include="Views\Shared\PesquisaPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

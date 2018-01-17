@@ -15,7 +15,7 @@ namespace Loteria.Controllers
     {
 
         ApostasViewModel apostasViewModel = new ApostasViewModel();
-        
+
         #region Serviços
         SorteioService sorteioService;
         ApostaService apostaService;
@@ -24,7 +24,7 @@ namespace Loteria.Controllers
 
         public ApostaController()
         {
-            
+
             sorteioService = new SorteioService();
             apostaService = new ApostaService(sorteioService.Repository.RepositoryFactory);
             UsuarioService = new UsuarioService(sorteioService.Repository.RepositoryFactory);
@@ -75,10 +75,33 @@ namespace Loteria.Controllers
         [RequerSessao("Inicio", "Painel")]
         public ActionResult Visualizar()
         {
-           
-            apostasViewModel.Usuario = Session["User"] as Usuarios;
-            apostasViewModel.Apostas = apostaService.RecuperarResultadosPorAno(apostasViewModel.Usuario, DateTime.Now.Year).ToList();
+
+            InicializarModel(apostasViewModel);
             return View(apostasViewModel);
+        }
+
+        [RequerSessao("Inicio", "Painel")]
+        [HttpPost]
+        public ActionResult Pesquisar(PesquisaViewModel model)
+        {
+            InicializarModel(apostasViewModel);
+            if (model.Ano != 0 && model.Mes != 0)
+            {
+                apostasViewModel.Apostas = apostaService.RecuperarResultadosPorMesAno(apostasViewModel.Usuario, model.Mes, model.Ano);
+            }
+            else if (model.Ano != 0)
+            {
+                apostasViewModel.Apostas = apostaService.RecuperarResultadosPorAno(apostasViewModel.Usuario, model.Ano);
+            }
+            else if (model.Mes != 0)
+            {
+                apostasViewModel.Apostas = apostaService.RecuperarResultadosPorMes(apostasViewModel.Usuario, model.Mes);
+            }
+            else if (model.Acertos != 0)
+            {
+                apostasViewModel.Apostas = apostaService.RecuperarResultadosPorAcertos(apostasViewModel.Usuario, model.Acertos);
+            }
+            return View("Visualizar", apostasViewModel);
         }
 
         private void InicializarModel(ApostasViewModel model)

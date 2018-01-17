@@ -3,11 +3,12 @@
 
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/bootstrap")
+
 @Styles.Render("~/Content/bootstrap")
 @Styles.Render("~/Content/css")
 
 
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default" >
     <div class="container">
         <div class="navbar-header">
             @Html.ActionLink("Loteria", "Inicio", "Painel", null, new { @class = "navbar-brand" })
@@ -139,10 +140,7 @@
 @Html.Partial("~/Views/Shared/ErroPartial.cshtml")
 
 <script>
-    function validateForm() {
-        return $("#form").validate().form();
-    }
-
+   
     $(".btnLoginRegistro").click(function () {
         var form = $("#" + $(this).attr('form'));
         var url = $(form).attr("action");
@@ -165,11 +163,6 @@
                 }
             }
         })
-    })
-
-    $(".menu li").click(function () {
-        $('.menu').removeAttr('active');
-        $(this).attr('active');
     })
 </script>
 

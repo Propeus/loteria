@@ -19,15 +19,15 @@
                 <label>-</label>
                 <input type="number" min="0" max="60" class="form-control NumeroSorteio" style="width:60px" value="0" />
                 <div class="form-group">
-                    <input type="button" name="register-submit" id="register-submit" form="ajax-form" class="btn btn-info btnGerar" value="Gerar numeros">
+                    <input type="button" name="register-submit" id="register-submit" form="ajax-form" class="btn btn-info btnGerar" value="Surpresinha">
                     <input type="submit" name="register-submit" id="register-submit" form="form-regstro" class="btn btn-info btnRegistrar" value="Registrar aposta">
                 </div>
 
 
                 <div class="container col-lg-6 col-lg-offset-4 form-inline form-group">
                     <form action="/Aposta/RegistrarNumeros" method="post" id="form-regstro">
-                        @Html.HiddenFor(x=> x.Aposta.NumeroAposta)
-                        @Html.HiddenFor(x=> x.Aposta.NumeroApostaExibicao)
+                        @Html.HiddenFor(x => x.Aposta.NumeroAposta, new { @class = "SorteioAposta" })
+                        @Html.HiddenFor(x => x.Aposta.NumeroApostaExibicao, new { @class = "SorteioApostaExibicao" })
                     </form>
                 </div>
             </div>
@@ -40,33 +40,4 @@
 <br />
 <hr class="divider" />
 @Html.Partial("~/Views/Shared/ApostasGridPartial.cshtml", Model.Apostas)
-
-<script>
-    $(".btnGerar").click(function () {
-        var form = $("#" + $(this).attr('form'));
-        var url = $(form).attr("action");
-        var method = $(form).attr("method");
-        $.ajax({
-            url: url,
-            method: method,
-            success: function (e) {
-                var numerosSoretiosInput = $(".NumeroSorteio");
-                for (var i = 0; i < numerosSoretiosInput.length; i++) {
-                    $(numerosSoretiosInput[i]).val(e.Numeros[i]);
-                }
-                $("#Aposta_NumeroAposta").val(e.Numeros.join(''));
-                $("#Aposta_NumeroApostaExibicao").val(e.Numeros.join('-'));
-            }
-        })
-    })
-    $('.NumeroSorteio').change(function () {
-        var numerosSoretiosInput = $(".NumeroSorteio");
-        var numeros = [];
-        for (var i = 0; i < numerosSoretiosInput.length; i++) {
-            numeros[i]=$(numerosSoretiosInput[i]).val();
-        }
-        $("#Aposta_NumeroAposta").val(numeros.join(''));
-        $("#Aposta_NumeroApostaExibicao").val(numeros.join('-'));
-    })
-</script>
-
+@Scripts.Render("~/bundles/site")
