@@ -16,6 +16,6 @@ namespace Loteria.Models
         public Sorteios Sorteio { get; set; }
         public Apostas Aposta { get; set; }
 
-        public List<ResultadoAposta> Apostas { get; set; }
+        public List<Apostas> Apostas { get; set; }
     }
 }

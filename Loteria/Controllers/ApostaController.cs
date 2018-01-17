@@ -87,19 +87,19 @@ namespace Loteria.Controllers
             InicializarModel(apostasViewModel);
             if (model.Ano != 0 && model.Mes != 0)
             {
-                apostasViewModel.Apostas = apostaService.RecuperarResultadosPorMesAno(apostasViewModel.Usuario, model.Mes, model.Ano);
+                apostasViewModel.Apostas = apostaService.RecuperarApostasPorMesAno(apostasViewModel.Usuario, model.Mes, model.Ano);
             }
             else if (model.Ano != 0)
             {
-                apostasViewModel.Apostas = apostaService.RecuperarResultadosPorAno(apostasViewModel.Usuario, model.Ano);
+                apostasViewModel.Apostas = apostaService.RecuperarApostasPorAno(apostasViewModel.Usuario, model.Ano);
             }
             else if (model.Mes != 0)
             {
-                apostasViewModel.Apostas = apostaService.RecuperarResultadosPorMes(apostasViewModel.Usuario, model.Mes);
+                apostasViewModel.Apostas = apostaService.RecuperarApostasPorMes(apostasViewModel.Usuario, model.Mes);
             }
             else if (model.Acertos != 0)
             {
-                apostasViewModel.Apostas = apostaService.RecuperarResultadosPorAcertos(apostasViewModel.Usuario, model.Acertos);
+                apostasViewModel.Apostas = apostaService.RecuperarPorAcertos(apostasViewModel.Usuario, model.Acertos);
             }
             return View("Visualizar", apostasViewModel);
         }
@@ -107,7 +107,7 @@ namespace Loteria.Controllers
         private void InicializarModel(ApostasViewModel model)
         {
             model.Usuario = UsuarioService.Repository.RecuperarPorId((Session["User"] as Usuarios).Id);
-            model.Apostas = apostaService.RecuperarResultadosPorAno(model.Usuario, DateTime.Now.Year).ToList();
+            model.Apostas = apostaService.RecuperarApostasPorAno(model.Usuario, DateTime.Now.Year).ToList();
         }
 
 

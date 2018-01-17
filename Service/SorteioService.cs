@@ -55,8 +55,9 @@ namespace Service
                 foreach (var item in aux)
                 {
                     item.Sorteios = sorteios;
-                    apostasRepository.Editar(item);
                 }
+                VerificarGanhadores(aux);
+                apostasRepository.EditarLote(aux);
                 scope.Complete();
             }
             return sorteios;
@@ -92,7 +93,7 @@ namespace Service
             if (mes > 12 && mes < 1)
                 throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
 
-            return Repository.RecuperarPorMesAno(mes,ano).ToList();
+            return Repository.RecuperarPorMesAno(mes, ano).ToList();
         }
 
         private bool PossuiQuantidadeNumeros(Sorteios sorteios, int qtdNumeros)
@@ -136,6 +137,62 @@ namespace Service
             };
 
             return sorteo;
+        }
+        public Apostas AvaliarAcertos(Apostas aposta)
+        {
+            string[] numerosSorteio = aposta.Sorteios?.NumeroSorteioExibicao.Split('-');
+            if (numerosSorteio == null)
+                return aposta;
+
+            aposta.ApostaResultados = new ApostaResultados();
+
+            string[] numerosAposta = aposta.NumeroApostaExibicao.Split('-');
+
+            LinkedList<int> numerosAcertos = new LinkedList<int>();
+
+            for (int i = 0; i < numerosSorteio.Length; i++)
+            {
+                if (numerosSorteio[i] == numerosAposta[i])
+                {
+                    aposta.ApostaResultados.Acertos++;
+                    numerosAcertos.AddLast(Convert.ToInt32(numerosAposta[i]));
+                }
+            }
+
+            aposta.ApostaResultados.NumerosAcertados = string.Join("-", numerosAcertos.ToArray());
+            return aposta;
+        }
+        private IQueryable<Apostas> VerificarGanhadores(IQueryable<Apostas> resultados)
+        {
+            foreach (var item in resultados)
+            {
+                AvaliarAcertos(item);
+            }
+            var ganhadores = resultados.Where(x => x.ApostaResultados.Acertos >= 4);
+            for (int i = 4; i <= 6; i++)
+            {
+                int ganhadoresptn = ganhadores.Count(x => x.ApostaResultados.Acertos == i);
+                foreach (var resutado in resultados)
+                {
+
+                    if (resutado.ApostaResultados.Acertos == 4)
+                    {
+                        resutado.ApostaResultados.ValorPremio = ((resutado.Sorteios.ValorPremio / 100) * 10) / ganhadoresptn;
+                    }
+                    if (resutado.ApostaResultados.Acertos == 5)
+                    {
+                        resutado.ApostaResultados.ValorPremio = ((resutado.Sorteios.ValorPremio / 100) * 20) / ganhadoresptn;
+                    }
+                    if (resutado.ApostaResultados.Acertos == 6)
+                    {
+                        resutado.ApostaResultados.ValorPremio = ((resutado.Sorteios.ValorPremio / 100) * 70) / ganhadoresptn;
+                    }
+
+
+                }
+            }
+
+            return resultados;
         }
     }
 }

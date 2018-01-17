@@ -20,7 +20,9 @@ namespace Repository
         public string NumeroApostaExibicao { get; set; }
         public System.DateTime DataAposta { get; set; }
         public Nullable<int> IdSorteio { get; set; }
+        public Nullable<int> IdResultado { get; set; }
     
+        public virtual ApostaResultados ApostaResultados { get; set; }
         public virtual Sorteios Sorteios { get; set; }
         public virtual Usuarios Usuarios { get; set; }
     }

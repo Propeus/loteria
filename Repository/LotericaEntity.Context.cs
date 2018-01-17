@@ -26,8 +26,9 @@ namespace Repository
         }
     
         public virtual DbSet<Detalhes> Detalhes { get; set; }
-        public virtual DbSet<Usuarios> Usuarios { get; set; }
-        public virtual DbSet<Apostas> Apostas { get; set; }
         public virtual DbSet<Sorteios> Sorteios { get; set; }
+        public virtual DbSet<Usuarios> Usuarios { get; set; }
+        public virtual DbSet<ApostaResultados> ApostaResultados { get; set; }
+        public virtual DbSet<Apostas> Apostas { get; set; }
     }
 }

@@ -17,8 +17,8 @@ namespace Repository
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Usuarios()
         {
-            this.Apostas = new HashSet<Apostas>();
             this.Sorteios = new HashSet<Sorteios>();
+            this.Apostas = new HashSet<Apostas>();
         }
     
         public int Id { get; set; }
@@ -29,8 +29,8 @@ namespace Repository
     
         public virtual Detalhes Detalhes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Apostas> Apostas { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Sorteios> Sorteios { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Apostas> Apostas { get; set; }
     }
 }

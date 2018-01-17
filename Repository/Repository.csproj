@@ -64,6 +64,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApostaResultados.cs">
+      <DependentUpon>LotericaEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Apostas.cs">
       <DependentUpon>LotericaEntity.tt</DependentUpon>
     </Compile>

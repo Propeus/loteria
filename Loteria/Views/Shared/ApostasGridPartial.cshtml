@@ -1,4 +1,4 @@
-﻿@model List<Service.Model.ResultadoAposta>
+﻿@model List<Repository.Apostas>
 
 <div class="container">
     <div class="panel panel-primary">
@@ -7,16 +7,13 @@
             <div class="table">
                 <div class="trow header">
                     <div class="cell">
-                        Numero da aposta
-                    </div>
-                    <div class="cell">
                         Data da aposta
                     </div>
                     <div class="cell">
-                        Numero do sorteio
+                        Numero da aposta
                     </div>
                     <div class="cell">
-                        Numero da aposta
+                        Numero do sorteio
                     </div>
                     <div class="cell">
                         Quantidade de acertos
@@ -31,34 +28,35 @@
                 @foreach (var item in Model)
                 {
                     <div class="trow">
-                        <div class="cell" data-title="Numero da aposta">
-                            @item.Aposta.NumeroApostaExibicao
-                        </div>
                         <div class="cell" data-title="Data da aposta">
-                            @item.Aposta.DataAposta.ToShortDateString() às @item.Aposta.DataAposta.ToShortTimeString()
+                            @item.DataAposta.ToShortDateString() às @item.DataAposta.ToShortTimeString()
                         </div>
-                        @if (item.Sorteio != null)
-                        {
-
-                            <div class="cell" data-title="Data da aposta">
-                                @item.Sorteio.NumeroSorteioExibicao
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="cell" data-title="Numero do sorteio">   </div>
-                        }
+                        <div class="cell" data-title="Numero da aposta">
+                            @item.NumeroApostaExibicao
+                        </div>
                         <div class="cell" data-title="Numero do sorteio">
-                            @item.Aposta.NumeroApostaExibicao
-                        </div>
-                        <div class="cell" data-title="Numeros acertados">
-                            @item.Acertos
+                            @if (item.Sorteios != null)
+                            {
+                                @item.Sorteios.NumeroSorteioExibicao
+                            }
                         </div>
                         <div class="cell" data-title="Quantidade de acertos">
-                            @string.Join("-", @item.NumerosAcertados)
+                            @if (item.ApostaResultados != null)
+                            {
+                                @item.ApostaResultados.Acertos
+                            }
+                        </div>
+                        <div class="cell" data-title="Numeros acertados">
+                            @if (item.ApostaResultados != null)
+                            {
+                                @item.ApostaResultados.NumerosAcertados
+                            }
                         </div>
                         <div class="cell" data-title="Prêmio">
-                            @item.ValorPremio
+                            @if (item.ApostaResultados != null)
+                            {
+                                @item.ApostaResultados.ValorPremio
+                            }
                         </div>
                     </div>
                 }

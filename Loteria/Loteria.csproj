@@ -120,9 +120,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Loterica.mdf">
+    <EmbeddedResource Include="App_Data\Loterica.mdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
     <Content Include="App_Data\Loterica_log.ldf">
       <DependentUpon>Loterica.mdf</DependentUpon>
     </Content>

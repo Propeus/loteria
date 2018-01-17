@@ -18,7 +18,7 @@ namespace Service
         private int NumeroMinimo { get; set; } = 0;
         private int NumeroMaximo { get; set; } = 60;
 
-     
+
         SorteioService sorteioService { get; set; }
 
         public ApostaService()
@@ -121,10 +121,7 @@ namespace Service
             return aposta;
         }
 
-        public List<ResultadoAposta> RecuperarResultadosPorAcertos(Usuarios usuario, int acertos)
-        {
-             return RecuperarResultados(usuario).Where(x => x.Acertos == acertos).ToList();
-        }
+      
 
         public List<Usuarios> RecuperarUsuariosApostas(int[] numeros)
         {
@@ -134,86 +131,58 @@ namespace Service
         }
         public List<Apostas> RecuperarApostas(Usuarios usuario)
         {
-            return Repository.RecuperarPorUsuario(usuario.Id).Include(x => x.Sorteios).ToList();
+            return Repository.RecuperarPorUsuario(usuario.Id).Include(x => x.Sorteios).Include(x => x.ApostaResultados).ToList();
         }
         public List<Apostas> RecuperarApostasPorMes(Usuarios usuario, int mes)
         {
             if (mes > 12 && mes < 1)
                 throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
 
-            return Repository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Month == mes).ToList();
+            return Repository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Month == mes).Include(x => x.ApostaResultados).ToList();
         }
         public List<Apostas> RecuperarApostasPorAno(Usuarios usuario, int ano)
         {
-            return Repository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Year == ano).ToList();
+            return Repository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Year == ano).Include(x => x.ApostaResultados).ToList();
         }
         public List<Apostas> RecuperarApostasPorMesAno(Usuarios usuario, int mes, int ano)
         {
             if (mes > 12 && mes < 1)
                 throw new ArgumentOutOfRangeException("Mes", mes, "O valor do mês deve ser entre 1 (Janeiro) a 12 (Dezembro).");
 
-            return Repository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Month == mes && x.DataAposta.Year == ano).ToList();
+            return Repository.RecuperarPorUsuario(usuario.Id).Where(x => x.DataAposta.Month == mes && x.DataAposta.Year == ano).Include(x => x.ApostaResultados).ToList();
         }
-        public List<ResultadoAposta> RecuperarResultados(Usuarios usuario)
+        public List<Apostas> RecuperarPorAcertos(Usuarios usuario, int acertos)
         {
-
-            var apostas = RecuperarApostas(usuario);
-            List<ResultadoAposta> resultados = apostas.Select(x => new ResultadoAposta { Aposta = x, Sorteio = x.Sorteios }).ToList();
-            return VerificarGanhadores(resultados);
+            return RecuperarApostas(usuario).Where(x => x.ApostaResultados.Acertos == acertos).ToList();
         }
-        public List<ResultadoAposta> RecuperarResultadosPorMes(Usuarios usuario, int mes)
-        {
+        //public List<ApostaResultados> RecuperarResultados(Usuarios usuario)
+        //{
 
-            var apostas = RecuperarApostasPorMes(usuario, mes);
-            List<ResultadoAposta> resultados = apostas.Select(x => new ResultadoAposta { Aposta = x, Sorteio = x.Sorteios }).ToList();
-            return VerificarGanhadores(resultados);
-        }
-        public List<ResultadoAposta> RecuperarResultadosPorAno(Usuarios usuario, int ano)
-        {
-            var apostas = RecuperarApostasPorAno(usuario, ano);
-            List<ResultadoAposta> resultados = apostas.Select(x => new ResultadoAposta { Aposta = x, Sorteio = x.Sorteios }).ToList();
-            return VerificarGanhadores(resultados);
-        }
-        public List<ResultadoAposta> RecuperarResultadosPorMesAno(Usuarios usuario, int mes, int ano)
-        {
+        //    var apostas = RecuperarApostas(usuario);
+        //    return= apostas.Select(x => x.ApostaResultados).ToList();
 
-            var apostas = RecuperarApostasPorMesAno(usuario, mes, ano);
-            List<ResultadoAposta> resultados = apostas.Select(x => new ResultadoAposta { Aposta = x, Sorteio = x.Sorteios }).ToList();
-            return VerificarGanhadores(resultados);
-        }
+        //}
+        //public List<ApostaResultados> RecuperarResultadosPorMes(Usuarios usuario, int mes)
+        //{
 
-        private static List<ResultadoAposta> VerificarGanhadores(List<ResultadoAposta> resultados)
-        {
-            foreach (var item in resultados)
-            {
-                item.AvaliarAcertos();
-            }
-            var ganhadores = resultados.Where(x => x.Acertos >= 4);
-            for (int i = 4; i <= 6; i++)
-            {
-                int ganhadoresptn = ganhadores.Count(x => x.Acertos == i);
-                foreach (var resutado in resultados)
-                {
+        //    var apostas = RecuperarApostasPorMes(usuario, mes);
+        //    return apostas.Select(x => x.ApostaResultados).ToList();
+        //}
+        //public List<ResultadoAposta> RecuperarResultadosPorAno(Usuarios usuario, int ano)
+        //{
+        //    var apostas = RecuperarApostasPorAno(usuario, ano);
+        //    List<ResultadoAposta> resultados = apostas.Select(x => new ResultadoAposta { Aposta = x, Sorteio = x.Sorteios }).ToList();
+        //    return VerificarGanhadores(resultados);
+        //}
+        //public List<ResultadoAposta> RecuperarResultadosPorMesAno(Usuarios usuario, int mes, int ano)
+        //{
 
-                    if (resutado.Acertos == 4)
-                    {
-                        resutado.ValorPremio = ((resutado.Sorteio.ValorPremio / 100) * 10) / ganhadoresptn;
-                    }
-                    if (resutado.Acertos == 5)
-                    {
-                        resutado.ValorPremio = ((resutado.Sorteio.ValorPremio / 100) * 20) / ganhadoresptn;
-                    }
-                    if (resutado.Acertos == 5)
-                    {
-                        resutado.ValorPremio = ((resutado.Sorteio.ValorPremio / 100) * 70) / ganhadoresptn;
-                    }
+        //    var apostas = RecuperarApostasPorMesAno(usuario, mes, ano);
+        //    List<ResultadoAposta> resultados = apostas.Select(x => new ResultadoAposta { Aposta = x, Sorteio = x.Sorteios }).ToList();
+        //    return VerificarGanhadores(resultados);
+        //}
 
 
-                }
-            }
-
-            return resultados.ToList();
-        }
 
 
     }

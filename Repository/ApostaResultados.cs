@@ -12,22 +12,19 @@ namespace Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class Sorteios
+    public partial class ApostaResultados
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Sorteios()
+        public ApostaResultados()
         {
             this.Apostas = new HashSet<Apostas>();
         }
     
         public int Id { get; set; }
-        public long NumeroSorteio { get; set; }
-        public string NumeroSorteioExibicao { get; set; }
-        public System.DateTime DataSorteio { get; set; }
-        public int IdUsuario { get; set; }
+        public int Acertos { get; set; }
+        public string NumerosAcertados { get; set; }
         public double ValorPremio { get; set; }
     
-        public virtual Usuarios Usuarios { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Apostas> Apostas { get; set; }
     }

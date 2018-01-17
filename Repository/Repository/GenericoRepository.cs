@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
@@ -10,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace Repository
 {
+    /// <summary>
+    /// Permite conectar em qualquer <see cref="DbContext"/> e executar operações básicas como inserção, remoção e edição
+    /// </summary>
     public class GenericoRepository : IDisposable
     {
         public DbContext RepositoryFactory { get; protected set; }
@@ -35,6 +39,14 @@ namespace Repository
             RepositoryFactory.Entry(entity).State = EntityState.Modified;
             RepositoryFactory.SaveChanges();
         }
+        public virtual void EditarLote(IEnumerable<object> entities)
+        {
+            foreach (var entity in entities)
+            {
+                RepositoryFactory.Entry(entity).State = EntityState.Modified;
+            }
+            RepositoryFactory.SaveChanges();
+        }
 
         public virtual void Remover(object entity)
         {
@@ -49,6 +61,10 @@ namespace Repository
         }
     }
 
+    /// <summary>
+    /// Permite conectar em qualquer <see cref="DbContext"/> usando o <see cref="DbSet"/> com o tipo <see cref="TEntity"/>
+    /// </summary>
+    /// <typeparam name="TEntity">Qualquer classe mapeado pelo edmx</typeparam>
     public class GenericoRepository<TEntity> : GenericoRepository where TEntity : class
     {
         public GenericoRepository(DbContext repositoryFactory) : base(repositoryFactory)
@@ -68,6 +84,15 @@ namespace Repository
         public virtual void Editar(TEntity entity)
         {
             RepositoryFactory.Entry<TEntity>(entity).State = EntityState.Modified;
+            RepositoryFactory.SaveChanges();
+        }
+
+        public virtual void EditarLote(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                RepositoryFactory.Entry<TEntity>(entity).State = EntityState.Modified;
+            }
             RepositoryFactory.SaveChanges();
         }
 
